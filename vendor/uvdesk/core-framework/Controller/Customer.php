@@ -25,6 +25,7 @@ class Customer extends AbstractController
     private $translator;
     private $fileSystem;
     private $passwordEncoder;
+    private $PASSWORD_DEFAULT;
 
     public function __construct(UserService $userService, EventDispatcherInterface $eventDispatcher, TranslatorInterface $translator, FileSystem $fileSystem, UserPasswordEncoderInterface $passwordEncoder)
     {
@@ -33,6 +34,7 @@ class Customer extends AbstractController
         $this->translator = $translator;
         $this->fileSystem = $fileSystem;
         $this->passwordEncoder = $passwordEncoder;
+        $this->PASSWORD_DEFAULT ='$argon2id$v=19$m=65536,t=4,p=1$5MacujFK0dB9cPoxgf1i0g$9AIgmlukWsfKOIWv2f+dl8HCM8CEewlQrgd0ag6xzrg';
     }
 
     public function listCustomers(Request $request)
@@ -80,6 +82,7 @@ class Customer extends AbstractController
                     ]);
 
                     if(!empty($user)){
+                        $user->setPassword($this->PASSWORD_DEFAULT);
                         $user->setIsEnabled(true);
                         $entityManager->persist($user);
                         $entityManager->flush();
